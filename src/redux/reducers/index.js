@@ -1,29 +1,7 @@
 import { combineReducers } from 'redux';
+import userInfo from './UserInfo';
+import token from './Token';
 
-const INITIAL_STATE = {
-  email: '',
-  name: '',
-  assertions: 0,
-  score: 0,
-  gravatarEmail: '',
-  token: {},
-};
-
-const exampleReducer = (state = INITIAL_STATE, action) => {
-  switch (action.type) {
-  case 'SEND_PLAYER_DATA':
-    return {
-      ...state,
-      email: action.payload[0],
-      name: action.payload[1],
-    };
-  case 'GET_SUCCESS':
-    return { ...state, token: action.payload.token };
-  default:
-    return state;
-  }
-};
-
-const rootReducer = combineReducers({ exampleReducer });
+const rootReducer = combineReducers({ userInfo, token });
 
 export default rootReducer;
