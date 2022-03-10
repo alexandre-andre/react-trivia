@@ -27,12 +27,13 @@ class Login extends React.Component {
     }
   }
 
-  handleSubmit = (e, email, name) => {
+  handleSubmit = async (e, email, name) => {
     const { dispatch, history } = this.props;
     const playerData = [email, name];
     e.preventDefault();
-    dispatch(actionCreators.sendUserLogin(playerData)); // dispara acao de enviar login do usuario
-    history.push('/carteira'); // apos o dispatch entra nn rota /carteira
+    dispatch(actionCreators.sendPlayerData(playerData)); // dispara acao de enviar login do usuario
+    await dispatch(actionCreators.requestAPI());
+    history.push('/game'); // apos o dispatch entra nn rota /carteira
   }
 
   render() {
@@ -72,6 +73,7 @@ class Login extends React.Component {
     );
   }
 }
+
 export default connect()(Login);
 Login.propTypes = {
   history: object,
