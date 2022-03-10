@@ -1,0 +1,78 @@
+import React from 'react';
+// import './Login.css';
+import { connect } from 'react-redux';
+import { object } from 'prop-types';
+import { actionCreators } from '../redux/action';
+
+class Login extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      email: '',
+      name: '',
+      isDisabled: true,
+    };
+  }
+
+  handleChange = ({ target: { name, value } }) => { // pah
+    this.setState({ [name]: value }, this.playBtnValidated); // seta name-value dinamicamente e chama uma funcao
+  }
+
+  playBtnValidated = () => {
+    const { email, name } = this.state;
+    if (email && name) {
+      this.setState({ isDisabled: false });
+    } else {
+      this.setState({ isDisabled: true });
+    }
+  }
+
+  handleSubmit = (e, email, name) => {
+    const { dispatch, history } = this.props;
+    const playerData = [email, name];
+    e.preventDefault();
+    dispatch(actionCreators.sendUserLogin(playerData)); // dispara acao de enviar login do usuario
+    history.push('/carteira'); // apos o dispatch entra nn rota /carteira
+  }
+
+  render() {
+    const { isDisabled, email, name } = this.state;
+    return (
+      <div className="containerLogin">
+        <form className="formLogin">
+          <input
+            className="inputLogin"
+            name="email"
+            type="email"
+            data-testid="input-gravatar-email"
+            placeholder="email"
+            value={ email }
+            onChange={ this.handleChange }
+          />
+          <input
+            className="inputLogin"
+            name="name"
+            type="name"
+            data-testid="input-player-name"
+            placeholder="nome"
+            value={ name }
+            onChange={ this.handleChange }
+          />
+          <button
+            className="btnLogin"
+            data-testid="btn-play"
+            onClick={ (e) => this.handleSubmit(e, email, name) }
+            type="button"
+            disabled={ isDisabled }
+          >
+            Play
+          </button>
+        </form>
+      </div>
+    );
+  }
+}
+export default connect()(Login);
+Login.propTypes = {
+  history: object,
+}.isRequired;
