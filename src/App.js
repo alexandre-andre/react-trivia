@@ -1,9 +1,9 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 // import FirstPage from './components/FirstPage';
-import Login from './components/Login';
-import Game from './components/Game';
-import Config from './components/Config';
+import Login from './pages/Login';
+import Game from './pages/Game';
+import Config from './pages/Config';
 
 export default function App() {
   return (
