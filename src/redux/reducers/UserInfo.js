@@ -10,9 +10,9 @@ const userInfo = (state = INITIAL_STATE, action) => {
   case 'SEND_PLAYER_DATA':
     return {
       ...state,
-      email: action.payload[0],
+      gravatarEmail: action.payload[0],
       name: action.payload[1],
-      // gravatarEmail: '',
+      hash: action.payload[2],
     };
   default:
     return state;

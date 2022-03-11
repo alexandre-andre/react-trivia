@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { object } from 'prop-types';
 import { Link } from 'react-router-dom';
+import md5 from 'crypto-js/md5';
 import { actionCreators } from '../redux/action';
 
 class Login extends React.Component {
@@ -30,8 +31,11 @@ class Login extends React.Component {
 
   handleSubmit = async (e, email, name) => {
     const { dispatch, history } = this.props;
-    const playerData = [email, name];
+    const hash = md5(email).toString();
+    const playerData = [email, name, hash];
+    console.log(playerData);
     e.preventDefault();
+
     dispatch(actionCreators.sendPlayerData(playerData)); // dispara acao de enviar login do usuario
     await dispatch(actionCreators.requestAPI());
     history.push('/game'); // apos o dispatch entra nn rota /carteira

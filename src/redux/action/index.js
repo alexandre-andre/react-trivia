@@ -9,8 +9,8 @@ export const actionTypes = {
 const requestBegin = () => ({ type: 'REQUEST' });
 const requestSuccess = (obj) => ({ type: 'REQUEST_SUCCESS', payload: obj });
 const requestError = (error) => ({ type: 'REQUEST_ERROR', payload: error });
-const sendPlayerData = ([email, name]) => (
-  { type: SEND_PLAYER_DATA, payload: [email, name] }
+const sendPlayerData = ([email, name, hash]) => (
+  { type: SEND_PLAYER_DATA, payload: [email, name, hash] }
 );
 
 const requestAPI = () => async (dispatch) => {
