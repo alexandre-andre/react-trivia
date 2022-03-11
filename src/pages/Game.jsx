@@ -7,7 +7,8 @@ import { actionCreators } from '../redux/action';
 
 class Game extends Component {
   state = {
-    questions: '',
+    questions: [],
+    questionsIndex: 0,
   }
 
   componentDidMount = async () => {
@@ -23,25 +24,52 @@ class Game extends Component {
     this.setState({ questions: triviaQuestions.results });
   }
 
-  // getQuestions = () => {
-
-  // }
+  nextQuestion = () => {
+    const { questionsIndex } = this.state;
+    const limitQuestions = 3;
+    if (questionsIndex <= limitQuestions) {
+      this.setState({ questionsIndex: questionsIndex + 1 });
+      console.log(questionsIndex);
+    }
+  }
 
   render() {
-    const { questions } = this.state;
-    console.log(questions);
+    const { questions, questionsIndex: i } = this.state;
+    const question = questions[i];
     return (
       <div>
         <Header />
         <h1>Pagina Game</h1>
         <div>
-          <h4 data-testid="question-category">{ questions.category }</h4>
-          <h4 data-testid="question-text">{ questions.question }</h4>
+          {
+            questions.length
+            && (
+              <>
+                <h4 data-testid="question-category">{ question.category }</h4>
+                <h4 data-testid="question-text">{ question.question }</h4>
+                { question.incorrect_answers.map((item, index) => (
+                  <button
+                    key={ index }
+                    type="button"
+                    data-testid={ `wrong-answer-${index}` }
+                  >
+                    { item }
+                  </button>))}
+                {
+                  <button
+                    type="button"
+                    data-testid="correct-answer"
+                  >
+                    { question.correct_answer }
+                  </button>
+                }
+              </>
+            )
+          }
         </div>
+        <br />
         <div>
-          {/* {
-            results.map()
-          } */}
+          <button type="button" onClick={ this.nextQuestion }>Próxima</button>
         </div>
       </div>
     );
