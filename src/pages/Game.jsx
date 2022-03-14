@@ -1,14 +1,93 @@
 import React, { Component } from 'react';
-// import PropType from 'prop-types';
+import { func } from 'prop-types';
 import { connect } from 'react-redux';
 import Header from '../components/Header';
+import getTriviaQuestion from '../service/getTriviaQuestions';
+import { actionCreators } from '../redux/action';
 
 class Game extends Component {
+  state = {
+    questions: [],
+    questionsIndex: 0,
+  }
+
+  componentDidMount = async () => {
+    const { dispatch } = this.props;
+    const token = JSON.parse(localStorage.getItem('token'));
+    let triviaQuestions = await getTriviaQuestion(token);
+    const invalidToken = 3;
+    if (triviaQuestions.response_code === invalidToken) {
+      await dispatch(actionCreators.requestAPI());
+      const newToken = JSON.parse(localStorage.getItem('token'));
+      triviaQuestions = await getTriviaQuestion(newToken);
+    }
+    if (triviaQuestions.length !== 0) {
+      this.setState({ questions: triviaQuestions.results });
+    }
+  }
+
+  nextQuestion = () => {
+    const { questionsIndex } = this.state;
+    const limitQuestions = 3;
+    if (questionsIndex <= limitQuestions) {
+      this.setState({ questionsIndex: questionsIndex + 1 });
+    }
+  }
+
   render() {
+    const { questions, questionsIndex: i } = this.state;
+    const question = questions[i];
+    let answers = [];
+
+    // Função abaixo baseada em https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+    function shuffleArray(array) {
+      for (let k = array.length - 1; k > 0; k -= 1) {
+        const j = Math.floor(Math.random() * (k + 1));
+        [array[k], array[j]] = [array[j], array[k]];
+      }
+    }
+
+    if (questions.length) {
+      answers = question.incorrect_answers.map((answer, index) => (
+        { answer, testId: `wrong-answer-${index}` }
+      ));
+      answers.push({ answer: question.correct_answer, testId: 'correct-answer' });
+      shuffleArray(answers);
+    }
+    console.log(answers);
+
     return (
       <div>
         <Header />
         <h1>Pagina Game</h1>
+        <div>
+          {
+            questions.length
+            && (
+              <>
+                <h4 data-testid="question-category">{ question.category }</h4>
+                <h4 data-testid="question-text">{ question.question }</h4>
+                <div data-testid="answer-options">
+                  {
+                    answers.map((item, index) => (
+                      <button
+                        key={ index }
+                        type="button"
+                        data-testid={ `${item.testId}` }
+                      >
+                        { item.answer }
+                      </button>
+                    ))
+                  }
+                </div>
+              </>
+            )
+          }
+        </div>
+        <br />
+        <div>
+          <button type="button" onClick={ this.nextQuestion }>Próxima</button>
+        </div>
       </div>
     );
   }
@@ -16,5 +95,6 @@ class Game extends Component {
 
 export default connect()(Game);
 
-Game.propType = {
-};
+Game.propTypes = {
+  dispatch: func,
+}.isRequired;
