@@ -32,6 +32,27 @@ class Game extends Component {
     if (questionsIndex <= limitQuestions) {
       this.setState({ questionsIndex: questionsIndex + 1 });
     }
+
+    this.removeAnswerColor();
+  }
+
+  removeAnswerColor = () => {
+    const correct = document.querySelector('#correct-answer');
+    const wrong = document.querySelectorAll('#wrong-answer');
+    correct.style.border = '';
+    for (let i = 0; i < wrong.length; i += 1) {
+      wrong[i].style.border = '';
+    }
+  }
+
+  handleAnswerColor = () => {
+    const correct = document.querySelector('#correct-answer');
+    const wrong = document.querySelectorAll('#wrong-answer');
+
+    correct.style.border = '3px solid rgb(6, 240, 15)';
+    for (let i = 0; i < wrong.length; i += 1) {
+      wrong[i].style.border = '3px solid rgb(255, 0, 0)';
+    }
   }
 
   render() {
@@ -49,12 +70,14 @@ class Game extends Component {
 
     if (questions.length) {
       answers = question.incorrect_answers.map((answer, index) => (
-        { answer, testId: `wrong-answer-${index}` }
+        { answer, testId: `wrong-answer-${index}`, id: 'wrong-answer' }
       ));
-      answers.push({ answer: question.correct_answer, testId: 'correct-answer' });
+      answers.push({
+        answer: question.correct_answer,
+        testId: 'correct-answer',
+        id: 'correct-answer' });
       shuffleArray(answers);
     }
-    console.log(answers);
 
     return (
       <div>
@@ -73,7 +96,9 @@ class Game extends Component {
                       <button
                         key={ index }
                         type="button"
+                        id={ `${item.id}` }
                         data-testid={ `${item.testId}` }
+                        onClick={ this.handleAnswerColor }
                       >
                         { item.answer }
                       </button>
@@ -86,7 +111,14 @@ class Game extends Component {
         </div>
         <br />
         <div>
-          <button type="button" onClick={ this.nextQuestion }>Próxima</button>
+          <button
+            type="button"
+            data-testid="btn-next"
+            onClick={ this.nextQuestion }
+          >
+            Próxima
+
+          </button>
         </div>
       </div>
     );
