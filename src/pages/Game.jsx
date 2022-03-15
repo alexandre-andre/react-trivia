@@ -54,7 +54,7 @@ class Game extends Component {
     const playerImg = document.querySelector('img').src;
     const ranking = JSON.parse(localStorage.getItem('ranking'));
     const player = ranking.find((el) => el.picture === playerImg);
-    if (player) { dispatch(actionCreators.updatePlayerScore(player.score)); }
+    if (player) { dispatch(actionCreators.updatePlayerScore([player.score])); }
   }
 
   nextQuestion = () => {
