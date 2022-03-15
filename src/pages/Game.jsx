@@ -70,6 +70,11 @@ class Game extends Component {
 
     this.setAnswersColors('', ''); // Remove as cores das alternativas
     this.setState({ isVisible: false });
+
+    // Redireciona para a pagina de feedback na quinta pergunta
+    const { history } = this.props;
+    const indexToEnd = 4;
+    if (questionsIndex === indexToEnd) history.push('/feedback');
   }
 
   setAnswersColors = (correctColor, wrongColor) => {
