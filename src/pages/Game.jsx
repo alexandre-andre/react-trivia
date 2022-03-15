@@ -33,12 +33,12 @@ class Game extends Component {
     responseObj.forEach((el) => { // Pega as alternativas para embaralhar
       const answers = [];
       el.incorrect_answers.map((answer, index) => (
-        answers.push({ answer, testId: `wrong-answer-${index}`, id: 'wrong-answer' })
+        answers.push({ answer, testId: `wrong-answer-${index}`, id: 'wrong' })
       ));
       answers.push({
         answer: el.correct_answer,
         testId: 'correct-answer',
-        id: 'correct-answer' });
+        id: 'correct' });
       answersArray.push(answers);
     });
 
@@ -61,25 +61,31 @@ class Game extends Component {
       });
     }
 
-    this.removeAnswerColor();
+    this.setAnswersColors('', ''); // Remove as cores das alternativas
   }
 
-  removeAnswerColor = () => {
-    const correct = document.querySelector('#correct-answer');
-    const wrong = document.querySelectorAll('#wrong-answer');
-    correct.style.border = '';
+  setAnswersColors = (correctColor, wrongColor) => {
+    const correct = document.querySelector('#correct');
+    const wrong = document.querySelectorAll('#wrong');
+
+    correct.style.border = correctColor;
     for (let i = 0; i < wrong.length; i += 1) {
-      wrong[i].style.border = '';
+      wrong[i].style.border = wrongColor;
     }
   }
 
-  handleAnswerColor = () => {
-    const correct = document.querySelector('#correct-answer');
-    const wrong = document.querySelectorAll('#wrong-answer');
+  onAnswerClick = ({ target }) => {
+    const { questions, questionsIndex: i, timer } = this.state;
+    const { difficulty } = questions[i];
+    const multiplier = { hard: 3, medium: 2, easy: 1 };
+    const initialPoints = 10;
 
-    correct.style.border = '3px solid rgb(6, 240, 15)';
-    for (let i = 0; i < wrong.length; i += 1) {
-      wrong[i].style.border = '3px solid rgb(255, 0, 0)';
+    this.setAnswersColors('3px solid rgb(6, 240, 15)', '3px solid rgb(255, 0, 0)');
+
+    if (target.id === 'correct') {
+      let points = 0;
+      points = initialPoints + (timer * multiplier[difficulty]);
+      console.log(points);
     }
   }
 
@@ -123,7 +129,7 @@ class Game extends Component {
                         id={ `${item.id}` }
                         data-testid={ `${item.testId}` }
                         disabled={ isDisabled }
-                        onClick={ this.handleAnswerColor }
+                        onClick={ this.onAnswerClick }
                       >
                         { item.answer }
                       </button>
