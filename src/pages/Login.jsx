@@ -33,12 +33,11 @@ class Login extends React.Component {
     const { dispatch, history } = this.props;
     const hash = md5(email).toString();
     const playerData = [email, name, hash];
-    console.log(playerData);
     e.preventDefault();
 
     dispatch(actionCreators.sendPlayerData(playerData)); // dispara acao de enviar login do usuario
     await dispatch(actionCreators.requestAPI());
-    history.push('/game'); // apos o dispatch entra nn rota /carteira
+    history.push('/game'); // apos o dispatch entra nn rota /game
   }
 
   render() {

@@ -19,7 +19,7 @@ class Header extends Component {
   }
 }
 
-const mapStateToProps = ({ userInfo: { name, score, hash } }) => ({
+const mapStateToProps = ({ player: { name, score, hash } }) => ({
   name, score, hash,
 });
 

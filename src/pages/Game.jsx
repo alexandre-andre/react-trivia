@@ -15,7 +15,7 @@ class Game extends Component {
   }
 
   componentDidMount = async () => {
-    const { dispatch } = this.props;
+    const { dispatch, score } = this.props;
     const token = JSON.parse(localStorage.getItem('token'));
     let triviaQuestions = await getTriviaQuestion(token);
     const invalidToken = 3;
@@ -48,6 +48,12 @@ class Game extends Component {
 
     const oneSecond = 1000;
     setInterval(this.decreaseTimer, oneSecond);
+
+    // Atualiza o placar pegando do localStorage
+    const playerImg = document.querySelector('img').src;
+    const ranking = JSON.parse(localStorage.getItem('ranking'));
+    const player = ranking.find((el) => el.picture === playerImg);
+    if (player) { dispatch(actionCreators.updatePlayerScore(player.score)); }
   }
 
   nextQuestion = () => {
@@ -105,9 +111,12 @@ class Game extends Component {
     const multiplier = { hard: 3, medium: 2, easy: 1 };
     const initialPoints = 10;
     const playerImg = document.querySelector('img').src;
+    const { dispatch } = this.props;
 
     if (playerInfo.picture === playerImg) {
       playerInfo.score += initialPoints + (timer * multiplier[difficulty]);
+      console.log(playerInfo.score);
+      dispatch(actionCreators.updatePlayerScore(playerInfo.score));
     }
   }
 
@@ -182,7 +191,11 @@ class Game extends Component {
   }
 }
 
-export default connect()(Game);
+const mapStateToProps = ({ player: { score } }) => ({
+  score,
+});
+
+export default connect(mapStateToProps)(Game);
 
 Game.propTypes = {
   dispatch: func,
