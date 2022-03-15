@@ -17,7 +17,8 @@ const player = (state = INITIAL_STATE, action) => {
   case 'UPDATE_PLAYER_SCORE':
     return {
       ...state,
-      score: action.payload,
+      score: action.payload[0],
+      assertions: action.payload[1],
     };
   default:
     return state;

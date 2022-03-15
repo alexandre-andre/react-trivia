@@ -99,7 +99,12 @@ class Game extends Component {
 
       if (player === undefined) { // Se o jogador ainda não está no ranking cria ele lá
         const newPlayerPoints = 0;
-        player = { name: playerName, score: newPlayerPoints, picture: playerImg };
+        player = {
+          name: playerName,
+          score: newPlayerPoints,
+          picture: playerImg,
+          assertions: 0,
+        };
         ranking.push(player);
         localStorage.setItem('ranking', JSON.stringify(ranking));
       }
@@ -124,8 +129,12 @@ class Game extends Component {
 
     if (playerInfo.picture === playerImg) {
       playerInfo.score += initialPoints + (timer * multiplier[difficulty]);
-      console.log(playerInfo.score);
-      dispatch(actionCreators.updatePlayerScore(playerInfo.score));
+      playerInfo.assertions += 1;
+      console.log([playerInfo.score, playerInfo.assertions]);
+      dispatch(
+        actionCreators.updatePlayerScore([playerInfo.score, playerInfo.assertions]),
+      );
+      // dispatch(actionCreators());
     }
   }
 
