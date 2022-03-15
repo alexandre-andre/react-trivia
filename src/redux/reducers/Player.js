@@ -5,7 +5,7 @@ const INITIAL_STATE = {
   gravatarEmail: '',
 };
 
-const userInfo = (state = INITIAL_STATE, action) => {
+const player = (state = INITIAL_STATE, action) => {
   switch (action.type) {
   case 'SEND_PLAYER_DATA':
     return {
@@ -14,9 +14,14 @@ const userInfo = (state = INITIAL_STATE, action) => {
       name: action.payload[1],
       hash: action.payload[2],
     };
+  case 'UPDATE_PLAYER_SCORE':
+    return {
+      ...state,
+      score: action.payload,
+    };
   default:
     return state;
   }
 };
 
-export default userInfo;
+export default player;
