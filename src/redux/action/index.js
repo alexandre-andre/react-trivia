@@ -14,8 +14,8 @@ const sendPlayerData = ([email, name, hash]) => (
   { type: SEND_PLAYER_DATA, payload: [email, name, hash] }
 );
 
-const updatePlayerScore = (score) => (
-  { type: UPDATE_PLAYER_SCORE, payload: score }
+const updatePlayerScore = ([score, assertions]) => (
+  { type: UPDATE_PLAYER_SCORE, payload: [score, assertions] }
 );
 
 const requestAPI = () => async (dispatch) => {
