@@ -37,6 +37,10 @@ class Login extends React.Component {
 
     dispatch(actionCreators.sendPlayerData(playerData)); // dispara acao de enviar login do usuario
     await dispatch(actionCreators.requestAPI());
+    // Cria a chave "ranking" no localStorage
+    if (localStorage.ranking === undefined) {
+      localStorage.ranking = '[]';
+    }
     history.push('/game'); // apos o dispatch entra nn rota /game
   }
 

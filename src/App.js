@@ -7,10 +7,6 @@ import Config from './pages/Config';
 import Feedback from './pages/Feedback';
 import Ranking from './pages/Ranking';
 
-if (localStorage.ranking === undefined) {
-  localStorage.ranking = '[]';
-}
-
 export default function App() {
   return (
     <BrowserRouter>
