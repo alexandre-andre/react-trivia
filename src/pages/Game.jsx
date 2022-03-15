@@ -15,7 +15,7 @@ class Game extends Component {
   }
 
   componentDidMount = async () => {
-    const { dispatch, score } = this.props;
+    const { dispatch } = this.props;
     const token = JSON.parse(localStorage.getItem('token'));
     let triviaQuestions = await getTriviaQuestion(token);
     const invalidToken = 3;
