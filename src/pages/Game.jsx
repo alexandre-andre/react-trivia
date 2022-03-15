@@ -12,6 +12,7 @@ class Game extends Component {
     answers: [],
     timer: 30,
     isDisabled: false,
+    isVisible: false,
   }
 
   componentDidMount = async () => {
@@ -68,6 +69,7 @@ class Game extends Component {
     }
 
     this.setAnswersColors('', ''); // Remove as cores das alternativas
+    this.setState({ isVisible: false });
   }
 
   setAnswersColors = (correctColor, wrongColor) => {
@@ -103,6 +105,8 @@ class Game extends Component {
 
       localStorage.setItem('ranking', JSON.stringify(ranking));
     }
+
+    this.setState({ isVisible: true });
   }
 
   refreshPoints = (playerInfo) => {
@@ -136,7 +140,8 @@ class Game extends Component {
   }
 
   render() {
-    const { questions, questionsIndex: i, answers, timer, isDisabled } = this.state;
+    const { questions, questionsIndex: i, answers,
+      timer, isDisabled, isVisible } = this.state;
     const question = questions[i];
     const answer = answers[i];
 
@@ -176,16 +181,17 @@ class Game extends Component {
           {`${timer}`}
         </p>
         <br />
-        <div>
-          <button
-            type="button"
-            data-testid="btn-next"
-            onClick={ this.nextQuestion }
-          >
-            Próxima
-
-          </button>
-        </div>
+        {
+          isVisible && (
+            <button
+              type="button"
+              data-testid="btn-next"
+              onClick={ this.nextQuestion }
+            >
+              Próxima
+            </button>
+          )
+        }
       </div>
     );
   }
