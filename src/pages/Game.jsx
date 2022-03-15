@@ -75,17 +75,39 @@ class Game extends Component {
   }
 
   onAnswerClick = ({ target }) => {
-    const { questions, questionsIndex: i, timer } = this.state;
-    const { difficulty } = questions[i];
-    const multiplier = { hard: 3, medium: 2, easy: 1 };
-    const initialPoints = 10;
+    const playerName = document.querySelector('h4').textContent;
+    const playerImg = document.querySelector('img').src;
 
     this.setAnswersColors('3px solid rgb(6, 240, 15)', '3px solid rgb(255, 0, 0)');
 
     if (target.id === 'correct') {
-      let points = 0;
-      points = initialPoints + (timer * multiplier[difficulty]);
-      console.log(points);
+      let ranking = JSON.parse(localStorage.getItem('ranking'));
+      let player = ranking.find((el) => el.picture === playerImg);
+
+      if (player === undefined) { // Se o jogador ainda não está no ranking cria ele lá
+        const newPlayerPoints = 0;
+        player = { name: playerName, score: newPlayerPoints, picture: playerImg };
+        ranking.push(player);
+        localStorage.setItem('ranking', JSON.stringify(ranking));
+      }
+
+      ranking = JSON.parse(localStorage.getItem('ranking'));
+
+      ranking.map(this.refreshPoints);
+
+      localStorage.setItem('ranking', JSON.stringify(ranking));
+    }
+  }
+
+  refreshPoints = (playerInfo) => {
+    const { questions, questionsIndex: i, timer } = this.state;
+    const { difficulty } = questions[i];
+    const multiplier = { hard: 3, medium: 2, easy: 1 };
+    const initialPoints = 10;
+    const playerImg = document.querySelector('img').src;
+
+    if (playerInfo.picture === playerImg) {
+      playerInfo.score += initialPoints + (timer * multiplier[difficulty]);
     }
   }
 

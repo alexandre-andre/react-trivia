@@ -5,6 +5,10 @@ import Login from './pages/Login';
 import Game from './pages/Game';
 import Config from './pages/Config';
 
+if (localStorage.ranking === undefined) {
+  localStorage.ranking = '[]';
+}
+
 export default function App() {
   return (
     <BrowserRouter>
