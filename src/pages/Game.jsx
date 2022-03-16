@@ -20,6 +20,7 @@ class Game extends Component {
     const token = JSON.parse(localStorage.getItem('token'));
     let triviaQuestions = await getTriviaQuestion(token);
     const invalidToken = 3;
+
     // Verifica se o token é invalido, se for renova
     if (triviaQuestions.response_code === invalidToken) {
       await dispatch(actionCreators.requestAPI());
@@ -30,9 +31,28 @@ class Game extends Component {
       this.setState({ questions: triviaQuestions.results });
     }
 
+    // Cria o array com as alternativas de todas as perguntas
     const responseObj = triviaQuestions.results;
+    const answersArray = this.createArrayOfAnswers(responseObj);
+    // Embaralha as alternativas
+    answersArray.forEach((el) => this.shuffleArray(el));
+    // Coloca as alternativas de todas as perguntas já embaralhadas no state
+    this.setState({ answers: answersArray });
+
+    // Atualiza o timer no estado
+    const oneSecond = 1000;
+    setInterval(this.decreaseTimer, oneSecond);
+
+    // Atualiza o placar pegando as informações no localStorage
+    const playerName = document.querySelector('h4').textContent;
+    const ranking = JSON.parse(localStorage.getItem('ranking'));
+    const player = ranking.find((el) => el.name === playerName);
+    if (player) { dispatch(actionCreators.updatePlayerScore([player.score])); }
+  }
+
+  createArrayOfAnswers = (responseObj) => {
     const answersArray = [];
-    responseObj.forEach((el) => { // Pega as alternativas para embaralhar
+    responseObj.forEach((el) => { // Pega as alternativas pra criar um array
       const answers = [];
       el.incorrect_answers.map((answer, index) => (
         answers.push({ answer, testId: `wrong-answer-${index}`, id: 'wrong' })
@@ -43,19 +63,7 @@ class Game extends Component {
         id: 'correct' });
       answersArray.push(answers);
     });
-
-    answersArray.forEach((el) => this.shuffleArray(el));
-
-    this.setState({ answers: answersArray });
-
-    const oneSecond = 1000;
-    setInterval(this.decreaseTimer, oneSecond);
-
-    // Atualiza o placar pegando do localStorage
-    const playerName = document.querySelector('h4').textContent;
-    const ranking = JSON.parse(localStorage.getItem('ranking'));
-    const player = ranking.find((el) => el.name === playerName);
-    if (player) { dispatch(actionCreators.updatePlayerScore([player.score])); }
+    return answersArray;
   }
 
   nextQuestion = () => {
@@ -107,10 +115,11 @@ class Game extends Component {
 
       this.verifyPlayerOnRanking(player);
 
+      // Pega o ranking novamente no localStorage caso seja atualizado na função verifyPlayerOnRanking()
       ranking = JSON.parse(localStorage.getItem('ranking'));
-
+      // Atualiza os pontos
       ranking.map(this.refreshPoints);
-
+      // Salva o ranking atualizado no localStorage
       localStorage.setItem('ranking', JSON.stringify(ranking));
     }
 
@@ -121,6 +130,7 @@ class Game extends Component {
     const playerImg = document.querySelector('img').src;
     const playerName = document.querySelector('h4').textContent;
     const ranking = JSON.parse(localStorage.getItem('ranking'));
+
     if (player === undefined) { // Se o jogador ainda não está no ranking cria ele lá
       const newPlayerPoints = 0;
       player = {
