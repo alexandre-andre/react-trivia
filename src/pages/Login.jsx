@@ -41,7 +41,7 @@ class Login extends React.Component {
     if (localStorage.ranking === undefined) {
       localStorage.ranking = '[]';
     }
-    history.push('/game'); // apos o dispatch entra nn rota /game
+    history.push('/game'); // apos o dispatch entra na rota /game
   }
 
   render() {
