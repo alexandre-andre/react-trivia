@@ -136,7 +136,6 @@ class Game extends Component {
       dispatch(
         actionCreators.updatePlayerScore([playerInfo.score, playerInfo.assertions]),
       );
-      // dispatch(actionCreators());
     }
   }
 
