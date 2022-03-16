@@ -74,7 +74,26 @@ class Game extends Component {
     // Redireciona para a pagina de feedback na quinta pergunta
     const { history } = this.props;
     const indexToEnd = 4;
-    if (questionsIndex === indexToEnd) history.push('/feedback');
+    if (questionsIndex === indexToEnd) {
+      const playerName = document.querySelector('h4').textContent;
+      const playerImg = document.querySelector('img').src;
+      const ranking = JSON.parse(localStorage.getItem('ranking'));
+      let player = ranking.find((el) => el.name === playerName);
+
+      if (player === undefined) { // Se o jogador ainda não está no ranking cria ele lá
+        const newPlayerPoints = 0;
+        player = {
+          name: playerName,
+          score: newPlayerPoints,
+          picture: playerImg,
+          assertions: 0,
+        };
+        ranking.push(player);
+        localStorage.setItem('ranking', JSON.stringify(ranking));
+      }
+
+      history.push('/feedback');
+    }
   }
 
   setAnswersColors = (correctColor, wrongColor) => {
@@ -88,14 +107,12 @@ class Game extends Component {
   }
 
   onAnswerClick = ({ target }) => {
-    const { questionsIndex } = this.state;
-    const indexToEnd = 4;
     const playerName = document.querySelector('h4').textContent;
     const playerImg = document.querySelector('img').src;
 
     this.setAnswersColors('3px solid rgb(6, 240, 15)', '3px solid rgb(255, 0, 0)');
 
-    if (target.id === 'correct' || questionsIndex === indexToEnd) {
+    if (target.id === 'correct') {
       let ranking = JSON.parse(localStorage.getItem('ranking'));
       let player = ranking.find((el) => el.name === playerName);
 
