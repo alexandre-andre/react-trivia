@@ -88,14 +88,16 @@ class Game extends Component {
   }
 
   onAnswerClick = ({ target }) => {
+    const { questionsIndex } = this.state;
+    const indexToEnd = 4;
     const playerName = document.querySelector('h4').textContent;
     const playerImg = document.querySelector('img').src;
 
     this.setAnswersColors('3px solid rgb(6, 240, 15)', '3px solid rgb(255, 0, 0)');
 
-    if (target.id === 'correct') {
+    if (target.id === 'correct' || questionsIndex === indexToEnd) {
       let ranking = JSON.parse(localStorage.getItem('ranking'));
-      let player = ranking.find((el) => el.picture === playerImg);
+      let player = ranking.find((el) => el.name === playerName);
 
       if (player === undefined) { // Se o jogador ainda não está no ranking cria ele lá
         const newPlayerPoints = 0;
@@ -124,13 +126,13 @@ class Game extends Component {
     const { difficulty } = questions[i];
     const multiplier = { hard: 3, medium: 2, easy: 1 };
     const initialPoints = 10;
-    const playerImg = document.querySelector('img').src;
+    const playerName = document.querySelector('h4').textContent;
     const { dispatch } = this.props;
 
-    if (playerInfo.picture === playerImg) {
+    if (playerInfo.name === playerName) {
       playerInfo.score += initialPoints + (timer * multiplier[difficulty]);
       playerInfo.assertions += 1;
-      console.log([playerInfo.score, playerInfo.assertions]);
+
       dispatch(
         actionCreators.updatePlayerScore([playerInfo.score, playerInfo.assertions]),
       );
