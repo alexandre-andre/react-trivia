@@ -20,6 +20,7 @@ class Game extends Component {
     const token = JSON.parse(localStorage.getItem('token'));
     let triviaQuestions = await getTriviaQuestion(token);
     const invalidToken = 3;
+    // Verifica se o token é invalido, se for renova
     if (triviaQuestions.response_code === invalidToken) {
       await dispatch(actionCreators.requestAPI());
       const newToken = JSON.parse(localStorage.getItem('token'));
@@ -51,9 +52,9 @@ class Game extends Component {
     setInterval(this.decreaseTimer, oneSecond);
 
     // Atualiza o placar pegando do localStorage
-    const playerImg = document.querySelector('img').src;
+    const playerName = document.querySelector('h4').textContent;
     const ranking = JSON.parse(localStorage.getItem('ranking'));
-    const player = ranking.find((el) => el.picture === playerImg);
+    const player = ranking.find((el) => el.name === playerName);
     if (player) { dispatch(actionCreators.updatePlayerScore([player.score])); }
   }
 
@@ -76,21 +77,10 @@ class Game extends Component {
     const indexToEnd = 4;
     if (questionsIndex === indexToEnd) {
       const playerName = document.querySelector('h4').textContent;
-      const playerImg = document.querySelector('img').src;
       const ranking = JSON.parse(localStorage.getItem('ranking'));
-      let player = ranking.find((el) => el.name === playerName);
+      const player = ranking.find((el) => el.name === playerName);
 
-      if (player === undefined) { // Se o jogador ainda não está no ranking cria ele lá
-        const newPlayerPoints = 0;
-        player = {
-          name: playerName,
-          score: newPlayerPoints,
-          picture: playerImg,
-          assertions: 0,
-        };
-        ranking.push(player);
-        localStorage.setItem('ranking', JSON.stringify(ranking));
-      }
+      this.verifyPlayerOnRanking(player);
 
       history.push('/feedback');
     }
@@ -108,25 +98,14 @@ class Game extends Component {
 
   onAnswerClick = ({ target }) => {
     const playerName = document.querySelector('h4').textContent;
-    const playerImg = document.querySelector('img').src;
 
     this.setAnswersColors('3px solid rgb(6, 240, 15)', '3px solid rgb(255, 0, 0)');
 
     if (target.id === 'correct') {
       let ranking = JSON.parse(localStorage.getItem('ranking'));
-      let player = ranking.find((el) => el.name === playerName);
+      const player = ranking.find((el) => el.name === playerName);
 
-      if (player === undefined) { // Se o jogador ainda não está no ranking cria ele lá
-        const newPlayerPoints = 0;
-        player = {
-          name: playerName,
-          score: newPlayerPoints,
-          picture: playerImg,
-          assertions: 0,
-        };
-        ranking.push(player);
-        localStorage.setItem('ranking', JSON.stringify(ranking));
-      }
+      this.verifyPlayerOnRanking(player);
 
       ranking = JSON.parse(localStorage.getItem('ranking'));
 
@@ -136,6 +115,23 @@ class Game extends Component {
     }
 
     this.setState({ isVisible: true });
+  }
+
+  verifyPlayerOnRanking = (player) => {
+    const playerImg = document.querySelector('img').src;
+    const playerName = document.querySelector('h4').textContent;
+    const ranking = JSON.parse(localStorage.getItem('ranking'));
+    if (player === undefined) { // Se o jogador ainda não está no ranking cria ele lá
+      const newPlayerPoints = 0;
+      player = {
+        name: playerName,
+        score: newPlayerPoints,
+        picture: playerImg,
+        assertions: 0,
+      };
+      ranking.push(player);
+      localStorage.setItem('ranking', JSON.stringify(ranking));
+    }
   }
 
   refreshPoints = (playerInfo) => { // Chamada no .map da linha 116 que roda ao clicar numa alternativa
