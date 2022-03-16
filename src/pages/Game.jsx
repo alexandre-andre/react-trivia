@@ -121,7 +121,7 @@ class Game extends Component {
     this.setState({ isVisible: true });
   }
 
-  refreshPoints = (playerInfo) => {
+  refreshPoints = (playerInfo) => { // Chamada no .map da linha 116 que roda ao clicar numa alternativa
     const { questions, questionsIndex: i, timer } = this.state;
     const { difficulty } = questions[i];
     const multiplier = { hard: 3, medium: 2, easy: 1 };
