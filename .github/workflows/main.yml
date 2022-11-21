@@ -24,7 +24,7 @@ jobs:
       - name: Fetch ESLint evaluator
         uses: actions/checkout@v2
         with:
-          repository: betrybe/eslint-linter-action
+          repository: projeto/eslint-linter-action
           ref: v3
           token: ${{ secrets.GIT_HUB_PAT }}
           path: .github/actions/eslint-evaluator
@@ -32,7 +32,7 @@ jobs:
       - name: Fetch Stylelint evaluator
         uses: actions/checkout@v2
         with:
-          repository: betrybe/stylelint-linter-action
+          repository: projeto/stylelint-linter-action
           ref: v2.1
           token: ${{ secrets.GIT_HUB_PAT }}
           path: .github/actions/stylelint-evaluator
@@ -40,7 +40,7 @@ jobs:
       - name: Fetch Blocked Files Checkout action
         uses: actions/checkout@v2
         with:
-          repository: betrybe/blocked-files-checkout-action
+          repository: projeto/blocked-files-checkout-action
           ref: v2
           token: ${{ secrets.GIT_HUB_PAT }}
           path: .github/actions/blocked-files-checkout
@@ -48,7 +48,7 @@ jobs:
       - name: Fetch Cypress evaluator
         uses: actions/checkout@v2
         with:
-          repository: betrybe/cypress-evaluator-action
+          repository: projeto/cypress-evaluator-action
           ref: v7
           token: ${{ secrets.GIT_HUB_PAT }}
           path: .github/actions/cypress-evaluator
@@ -56,7 +56,7 @@ jobs:
       - name: Fetch Store evaluation
         uses: actions/checkout@v2
         with:
-          repository: betrybe/store-evaluation-action
+          repository: projeto/store-evaluation-action
           ref: v4
           token: ${{ secrets.GIT_HUB_PAT }}
           path: .github/actions/store-evaluation
